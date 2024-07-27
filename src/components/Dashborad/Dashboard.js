@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { useTable } from "react-table";
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+  faPlus,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+
 import logo from "../../assets/company_logo.png";
+import edit from "../../assets/edit.png";
+import bookMark from "../../assets/bookmark.png";
+import addfiles from "../../assets/addFiles.png";
+import folder from "../../assets/folder.png";
+import CommonQuestion from "../commonQuestion/CommonQuestion";
+import Table from "../Table/Table";
+import settings from "../../assets/settings.png";
+import userprofile from "../../assets/user_profile.png"
 
 // Styled components
 const Container = styled.div`
   display: grid;
   grid-template-areas:
-    "header header"
+    "sidebar header"
     "sidebar main";
   grid-template-columns: auto 1fr;
-  gap: 20px;
+  grid-template-rows: auto 1fr;
+  height: 100vh; /* Ensure container takes full viewport height */
   padding: 20px;
+  background-color: #f3f3f3;
 
   @media (max-width: 768px) {
     grid-template-areas:
@@ -34,24 +35,22 @@ const Container = styled.div`
     grid-template-columns: 1fr;
   }
 `;
-
 const Header = styled.header`
   grid-area: header;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: rgba(32, 176, 211, 0.1);
-  border-bottom: 1px solid #dee2e6;
+  background-color: #ffffff;
 `;
 
 const Sidebar = styled.aside`
   grid-area: sidebar;
   background-color: rgba(32, 176, 211, 0.1);
-  border-right: 1px solid #dee2e6;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  height: 100%; /* Ensure sidebar takes full height of the container */
 
   @media (max-width: 768px) {
     display: none;
@@ -61,6 +60,7 @@ const Sidebar = styled.aside`
 const Main = styled.main`
   grid-area: main;
   padding: 20px;
+  overflow-y: auto; /* Add scroll if content overflows */
 `;
 
 const WorkspaceList = styled.div`
@@ -87,26 +87,6 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const CommonQuestions = styled.div`
-  margin-top: 20px;
-`;
-
-const Question = styled.div`
-  margin: 10px 0;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-top: 20px;
-  box-sizing: border-box;
-`;
-
 const Image = styled.img`
   width: 70%;
   max-width: 200px;
@@ -120,53 +100,154 @@ const Heading = styled.h3`
   font-size: 1rem;
   margin-bottom: 20px;
   color: #fff;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-
-  th,
-  td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f2f2f2;
-  }
+  line-height: 24px;
+  letter-spacing: 0.22px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 `;
 
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center; 
-  gap: 10px; 
+  align-items: center;
+  gap: 10px;
   background-color: #20b0d3;
   border-radius: 12px;
   justify-content: center;
 `;
 
-const GraphContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  margin: 20px 0;
-`;
-
 const WorkspaceHeading = styled.h3`
-  font-size: 1rem;
+  font-size: 12px;
   margin-bottom: 20px;
   color: #000;
+  line-height: 24px;
+  letter-spacing: 0.22px;
+  font-weight: 400;
 `;
 
 const WorkSpaceContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
+  justify-content: space-between;
+  margin-top: 12px;
+`;
+
+const Subheading = styled.p`
+  color: #707070;
+`;
+
+const Sidebartext = styled.p`
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 18px;
+  color: #707070;
+`;
+
+const ButtonContainer = styled.div`
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    &:hover ${Subheading} {
+      color: rgba(
+        32,
+        176,
+        211,
+        1
+      ); /* Different color for subheading on hover */
+    }
+    &:hover ${Sidebartext} {
+      color: #000; /* Change color on hover */
+    }
+  }
+`;
+
+const EditImage = styled.img`
+  width: 26px;
+  height: 26px;
+  margin-left: 10px;
+  margin-top: 8px;
+`;
+
+const SaveContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100px;
+  gap: 20px;
+`;
+
+const SaveButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Icon = styled.div`
+  font-size: 32px;
+  margin-bottom: 5px;
+`;
+
+const Label = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+`;
+
+const Badge = styled.div`
+  background-color: #1f1f7a;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+`;
+
+const SidebarFooter = styled.div`
+  background-color: #20b0d3;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-top: auto; /* Pushes the footer to the bottom */
+  color: white;
+  font-size: 14px;
+`;
+
+const UserName = styled.span`
+  margin-left: 10px;
+`;
+
+const FooterIcon = styled.div`
+  margin-left: auto;
+`;
+
+const SettingImage = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
+const ProfileImage = styled.img`
+    width: 36px;
+    height: 36px;
 `;
 
 // Function to get current time
@@ -176,24 +257,6 @@ const getCurrentTime = () => {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   return `${hours}:${minutes}`;
 };
-
-// Sample data for table and graph
-const tableData = [
-  { title1: "data 1", title2: "sugarcup", title3: "200" },
-  { title1: "data 1", title2: "sugarcup", title3: "150" },
-  { title1: "data 1", title2: "sugarcup", title3: "300" },
-  { title1: "data 1", title2: "sugarcup", title3: "250" },
-];
-
-const graphData = [
-  { name: "Page A", data1: 100, data2: 200, data3: 300 },
-  { name: "Page B", data1: 150, data2: 250, data3: 350 },
-  { name: "Page C", data1: 200, data2: 300, data3: 150 },
-  { name: "Page D", data1: 250, data2: 350, data3: 200 },
-  { name: "Page E", data1: 300, data2: 150, data3: 100 },
-  { name: "Page F", data1: 350, data2: 200, data3: 250 },
-  { name: "Page G", data1: 400, data2: 250, data3: 300 },
-];
 
 // Main component
 const Dashboard = () => {
@@ -207,38 +270,29 @@ const Dashboard = () => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
-  // Table columns
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Title 1",
-        accessor: "title1",
-      },
-      {
-        Header: "Title 2",
-        accessor: "title2",
-      },
-      {
-        Header: "Title 3",
-        accessor: "title3",
-      },
-    ],
-    []
-  );
-
-  const data = React.useMemo(() => tableData, []);
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const handleClick = () => {
+    console.log("Container clicked");
+  };
 
   return (
     <Container>
       <Header>
-        <h2>July 10 - Competitive Spends - {currentTime}</h2>
-        <div>
-          <button>SAVED</button>
-          <button>FILES</button>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <h2>July 10 - Competitive Spends - {currentTime}</h2>
+          <EditImage src={edit} alt="Descriptive Alt Text" />
         </div>
+        <SaveContainer>
+          <SaveButton>
+            <Label>SAVED</Label>
+            <EditImage src={bookMark} alt="Descriptive Alt Text" />
+          </SaveButton>
+          <SaveButton>
+            <Label>FILES</Label>
+            <EditImage src={folder} alt="Descriptive Alt Text" />
+
+            <Badge>2</Badge>
+          </SaveButton>
+        </SaveContainer>
       </Header>
       <Sidebar>
         <Image src={logo} alt="logo" />
@@ -247,91 +301,52 @@ const Dashboard = () => {
           <Heading>NEW WORKSPACE</Heading>
         </StyledContainer>
         <WorkSpaceContainer>
-          <FontAwesomeIcon icon={faSearch} size="1x" color="#000" />
           <WorkspaceHeading>WORKSPACES</WorkspaceHeading>
+          <FontAwesomeIcon icon={faSearch} size="1x" color="#000" />
         </WorkSpaceContainer>
 
-        <p>July 10 - Competitive Spends</p>
-        <p>10 JUL 2024 /  9:23 AM</p>
-        <p>Annual Spends - Health Foods</p>
-        <p>21 JUN 2024 / 03:28 PM </p>
-        <p>US North West Insights Q1 '24</p>
-        <p>03 JUN 2024 /  7:11 AM</p>
+        <ButtonContainer onClick={handleClick}>
+          <Sidebartext>July 10 - Competitive Spends</Sidebartext>
+          <Subheading>10 JUL 2024 / 9:23 AM</Subheading>
+        </ButtonContainer>
+        <ButtonContainer onClick={handleClick}>
+          <Sidebartext>Annual Spends - Health Foods</Sidebartext>
+          <Subheading>21 JUN 2024 / 03:28 PM </Subheading>
+        </ButtonContainer>
+        <ButtonContainer onClick={handleClick}>
+          <Sidebartext>US North West Insights Q1 '24</Sidebartext>
+          <Subheading>03 JUN 2024 / 7:11 AM</Subheading>
+        </ButtonContainer>
+        <SidebarFooter>
+          <ProfileImage src={userprofile} alt="Descriptive Alt Text" />
+          <UserName>Steve Lomingo</UserName>
+          <FooterIcon>
+          <SettingImage src={settings} alt="Descriptive Alt Text" />
+          </FooterIcon>
+        </SidebarFooter>
       </Sidebar>
       <Main>
-        <h2>July 10 - Competitive Spends - {currentTime}</h2>
-        <Image src="path/to/your/image.jpg" alt="Descriptive Alt Text" />
-        <p>Successfully uploaded to workspace</p>
-        <FileList>
+        {/* <h2>July 10 - Competitive Spends - {currentTime}</h2>
+        <EditImage src={edit} alt="Descriptive Alt Text" /> */}
+        {/* <p>Successfully uploaded to workspace</p> */}
+        {/* <FileList>
           <a href="#">FinQ12022_1151511_1151512_export.csv</a>
           <a href="#">FinQ22022_1151511_1151513_export.csv</a>
         </FileList>
         <Dropdown>
           <option>15 questions for Cr Card spends</option>
         </Dropdown>
-        <Button>Analyze</Button>
-        <CommonQuestions>
-          <Question>Common media spends question #1</Question>
-          <Question>Common media spends question #2</Question>
-          <Question>Common media spends question #3</Question>
-          <Question>Common media spends question #4</Question>
-        </CommonQuestions>
-        <Input type="text" placeholder="Type your question" />
+        <Button>Analyze</Button> */}
 
+        <CommonQuestion />
         {/* Table */}
-        <Table {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
+        {/* <Table /> */}
 
-        {/* Graph */}
-        <GraphContainer>
-          <ResponsiveContainer>
-            <BarChart data={graphData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis domain={[0, 400]} tickCount={9} />
-              <YAxis
-                yAxisId="right"
-                orientation="right"
-                domain={[0, 400]}
-                tickCount={9}
-              />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="data1" fill="#ef8735" />
-              <Bar dataKey="data2" fill="#8e69b8" />
-              <Line
-                type="monotone"
-                dataKey="data3"
-                stroke="#ff7300"
-                yAxisId="right"
-                strokeWidth={2}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </GraphContainer>
+        {/* Graph
+        <div style={{marginTop:40}}>
+        <Graph />
+        </div> */}
+    
       </Main>
     </Container>
   );
