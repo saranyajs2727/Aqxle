@@ -316,8 +316,8 @@ const Dashboard = () => {
         </SidebarFooter>
       </Sidebar>
       <Main>
-        {/* <InsightWorkSpace /> */}
-        <CommonQuestion />
+        <InsightWorkSpace />
+        {/* <CommonQuestion /> */}
         {/* Table */}
         {/* <Table /> */}
 
