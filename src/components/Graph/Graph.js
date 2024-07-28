@@ -33,7 +33,7 @@ const Graph = () => {
   return (
     <>
       <GraphContainer>
-        <ResponsiveContainer>
+        {/* <ResponsiveContainer>
           <BarChart data={graphData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
@@ -56,7 +56,20 @@ const Graph = () => {
               strokeWidth={2}
             />
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer> */}
+         <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={graphData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis domain={[0, 400]} tickCount={9} />
+        <YAxis yAxisId="right" orientation="right" domain={[0, 400]} tickCount={9} />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="data1" fill="#ef8735" />
+        <Bar dataKey="data2" fill="#8e69b8" />
+        <Line type="monotone" dataKey="data3" stroke="#ff7300" yAxisId="right" strokeWidth={2} />
+      </BarChart>
+    </ResponsiveContainer>
       </GraphContainer>
     </>
   );

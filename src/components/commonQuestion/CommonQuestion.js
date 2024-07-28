@@ -9,6 +9,7 @@ import triangle from "../../assets/Triangle.png";
 import question from "../../assets/question.png";
 import arrowRight from "../../assets/arrow_right.png";
 import whiteArrow from "../../assets/rightArrow.png";
+import SaveModal from "../SaveModal/SaveModal";
 
 // Styled components
 const CommonQuestions = styled.div`
