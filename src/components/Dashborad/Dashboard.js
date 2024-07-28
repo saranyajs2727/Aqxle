@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import logo from "../../assets/company_logo.png";
 import edit from "../../assets/edit.png";
@@ -14,7 +11,8 @@ import folder from "../../assets/folder.png";
 import CommonQuestion from "../commonQuestion/CommonQuestion";
 import Table from "../Table/Table";
 import settings from "../../assets/settings.png";
-import userprofile from "../../assets/user_profile.png"
+import userprofile from "../../assets/user_profile.png";
+import InsightWorkSpace from "../InsightWorkSpace/InsightWorkSpace";
 
 // Styled components
 const Container = styled.div`
@@ -40,7 +38,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 4px;
   background-color: #ffffff;
 `;
 
@@ -50,6 +48,7 @@ const Sidebar = styled.aside`
   padding: 20px;
   display: flex;
   flex-direction: column;
+  width: 250px;
   height: 100%; /* Ensure sidebar takes full height of the container */
 
   @media (max-width: 768px) {
@@ -63,30 +62,6 @@ const Main = styled.main`
   overflow-y: auto; /* Add scroll if content overflows */
 `;
 
-const WorkspaceList = styled.div`
-  margin-bottom: 20px;
-`;
-
-const WorkspaceItem = styled.div`
-  margin-bottom: 10px;
-`;
-
-const FileList = styled.div`
-  margin: 10px 0;
-`;
-
-const Dropdown = styled.select`
-  width: 100%;
-  max-width: 300px;
-  margin: 20px 0;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-`;
-
 const Image = styled.img`
   width: 70%;
   max-width: 200px;
@@ -98,7 +73,6 @@ const Image = styled.img`
 
 const Heading = styled.h3`
   font-size: 1rem;
-  margin-bottom: 20px;
   color: #fff;
   line-height: 24px;
   letter-spacing: 0.22px;
@@ -113,11 +87,11 @@ const StyledContainer = styled.div`
   background-color: #20b0d3;
   border-radius: 12px;
   justify-content: center;
+  padding: 0px;
 `;
 
 const WorkspaceHeading = styled.h3`
   font-size: 12px;
-  margin-bottom: 20px;
   color: #000;
   line-height: 24px;
   letter-spacing: 0.22px;
@@ -138,10 +112,11 @@ const Subheading = styled.p`
 `;
 
 const Sidebartext = styled.p`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 18px;
   color: #707070;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 `;
 
 const ButtonContainer = styled.div`
@@ -189,7 +164,7 @@ const SaveButton = styled.button`
   flex-direction: column;
   align-items: center;
   position: relative;
-
+  margin-right: 20px;
   &:focus {
     outline: none;
   }
@@ -246,8 +221,8 @@ const SettingImage = styled.img`
 `;
 
 const ProfileImage = styled.img`
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 `;
 
 // Function to get current time
@@ -261,6 +236,7 @@ const getCurrentTime = () => {
 // Main component
 const Dashboard = () => {
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
+  console.log("🚀 ~ Dashboard ~ currentTime:", currentTime);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -278,14 +254,28 @@ const Dashboard = () => {
     <Container>
       <Header>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <h2>July 10 - Competitive Spends - {currentTime}</h2>
+          <h2 style={{ fontFamily: "inherit" }}>
+            July 10 - Competitive Spends - {currentTime}
+          </h2>
           <EditImage src={edit} alt="Descriptive Alt Text" />
         </div>
         <SaveContainer>
+          <hr
+            style={{
+              color: "rgba(199, 199, 199, 1)",
+              height: 108,
+            }}
+          />
           <SaveButton>
             <Label>SAVED</Label>
             <EditImage src={bookMark} alt="Descriptive Alt Text" />
           </SaveButton>
+          <hr
+            style={{
+              color: "rgba(199, 199, 199, 1)",
+              height: 108,
+            }}
+          />
           <SaveButton>
             <Label>FILES</Label>
             <EditImage src={folder} alt="Descriptive Alt Text" />
@@ -321,23 +311,12 @@ const Dashboard = () => {
           <ProfileImage src={userprofile} alt="Descriptive Alt Text" />
           <UserName>Steve Lomingo</UserName>
           <FooterIcon>
-          <SettingImage src={settings} alt="Descriptive Alt Text" />
+            <SettingImage src={settings} alt="Descriptive Alt Text" />
           </FooterIcon>
         </SidebarFooter>
       </Sidebar>
       <Main>
-        {/* <h2>July 10 - Competitive Spends - {currentTime}</h2>
-        <EditImage src={edit} alt="Descriptive Alt Text" /> */}
-        {/* <p>Successfully uploaded to workspace</p> */}
-        {/* <FileList>
-          <a href="#">FinQ12022_1151511_1151512_export.csv</a>
-          <a href="#">FinQ22022_1151511_1151513_export.csv</a>
-        </FileList>
-        <Dropdown>
-          <option>15 questions for Cr Card spends</option>
-        </Dropdown>
-        <Button>Analyze</Button> */}
-
+        {/* <InsightWorkSpace /> */}
         <CommonQuestion />
         {/* Table */}
         {/* <Table /> */}
@@ -346,7 +325,6 @@ const Dashboard = () => {
         <div style={{marginTop:40}}>
         <Graph />
         </div> */}
-    
       </Main>
     </Container>
   );
