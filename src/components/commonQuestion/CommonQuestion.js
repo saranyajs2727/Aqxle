@@ -13,6 +13,7 @@ import whiteArrow from "../../assets/rightArrow.png";
 // Styled components
 const CommonQuestions = styled.div`
   margin-top: 20px;
+  margin-botton: 30px;
   text-align: center;
 `;
 
@@ -164,6 +165,7 @@ const Wrapper = styled.div`
   border-radius: 4px;
   width: 41%;
   cursor: pointer;
+  margin-right: 20px;
 `;
 
 const Icon = styled.img`
@@ -223,6 +225,23 @@ const InputContainer = styled.div`
   z-index: 1000;
 `;
 
+const BlueBoxContainer = styled.div`
+  background-color: rgb(32, 176, 211);
+  height: 48px;
+  width: 56px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const BlueBoxIcon = styled.img`
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  align-self: center;
+`;
+
 const data = [
   {
     id: "Question 1",
@@ -250,6 +269,13 @@ const data = [
     value: `98616117.7802`,
     heading: `Common media spends question #4`,
   },
+  {
+    id: "Question 5",
+    question: `What is the total spend of jp morgan ?`,
+    value: `To provide an accurate answer, I need to clarify which dataset you would like to use for
+        calculating the total spend of JP Morgan Chase. We have two datasets available: the Vivvix dataset and the Pathmatics dataset. Each dataset might represent the spend data differently.
+        Could you please specify from which dataset (Vivvix or Pathmatics) you would like to calculate the total spend for JP Morgan Chase? Additionally, if you choose the Vivvix dataset, would you like to consider the "TOTAL $" column for this calculation?`,
+  },
 ];
 
 // Chart component (placeholder)
@@ -269,7 +295,7 @@ const CommonQuestion = () => {
   const sampleDataRef = useRef(null);
 
   const SampleData = ({ item }) => (
-    <div key={item.id} ref={sampleDataRef}>
+    <div key={item.id} ref={sampleDataRef} style={{ marginBottom: 60 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h3>{item.heading}</h3>
         <div style={{ display: "flex" }}>
@@ -284,6 +310,41 @@ const CommonQuestion = () => {
     </div>
   );
 
+  const updateCustomQuestionValue = (userInput) => {
+    data[4].heading = userInput;
+  };
+
+  // const handleQuestionClick = (question) => {
+  //   if (question === undefined) {
+  //     question = questionPicked;
+  //   }
+  //   setLoading(true);
+  //   setSelectedQuestion(question);
+  //   updateCustomQuestionValue(userInput);
+
+  //   // Determine the item to display (first matched item or the first item in the data array)
+  //   const matchedItems = data.filter(
+  //     (item) =>
+  //       item.id === selectedQuestion || item.heading === selectedQuestion
+  //   );
+  //   const itemToDisplay = matchedItems.length > 0 ? matchedItems[0] : data[4];
+
+  //   if (itemToDisplay) {
+  //     setUserInput(itemToDisplay.heading);
+  //     setRenderedContent((prevContent) => [...prevContent, itemToDisplay]);
+  //   }
+
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     if (sampleDataRef.current) {
+  //       sampleDataRef.current.scrollIntoView({
+  //         behavior: "smooth",
+  //         block: "start",
+  //       });
+  //     }
+  //   }, 100); // Simulate API loading time
+  // };
+
   const handleQuestionClick = (question) => {
     if (question === undefined) {
       question = questionPicked;
@@ -291,16 +352,40 @@ const CommonQuestion = () => {
     setLoading(true);
     setSelectedQuestion(question);
 
-    // Determine the item to display (first matched item or the first item in the data array)
+    // Update the value for custom questions
+    updateCustomQuestionValue(userInput);
+
+    // Determine the item to display (first matched item or the custom item)
     const matchedItems = data.filter(
       (item) =>
         item.id === selectedQuestion || item.heading === selectedQuestion
     );
-    const itemToDisplay = matchedItems.length > 0 ? matchedItems[0] : data[0];
+    const itemToDisplay =
+      matchedItems.length > 0
+        ? matchedItems[0]
+        : { id: "custom", heading: userInput, value: data[0].value };
 
     if (itemToDisplay) {
+      const updatedRenderedContent = renderedContent.map((contentItem) => {
+        if (contentItem.id === itemToDisplay.id) {
+          return {
+            ...contentItem,
+            heading: userInput,
+          };
+        }
+        return contentItem;
+      });
+
       setUserInput(itemToDisplay.heading);
-      setRenderedContent((prevContent) => [...prevContent, itemToDisplay]);
+      setRenderedContent((prevContent) => {
+        const existingItem = prevContent.find(
+          (item) => item.id === itemToDisplay.id
+        );
+        if (existingItem) {
+          return updatedRenderedContent;
+        }
+        return [...prevContent, itemToDisplay];
+      });
     }
 
     setTimeout(() => {
@@ -350,17 +435,26 @@ const CommonQuestion = () => {
           <SectionTitle style={{ fontWeight: "500", fontSize: 28 }}>
             Quick-analyze from your saved templates
           </SectionTitle>
-          <div style={{ display: "flex", flexDirection: "row" }}></div>
-          <Wrapper>
-            <Icon src={question} alt="Descriptive Alt Text" />
-            <TemplateInput
-              type="text"
-              value="15 questions for Cr Card spends"
-              readOnly
-            />
-            <Icon src={triangle} alt="Descriptive Alt Text" />
-          </Wrapper>
-          <div></div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Wrapper>
+              <Icon src={question} alt="Descriptive Alt Text" />
+              <TemplateInput
+                type="text"
+                value="15 questions for Cr Card spends"
+                readOnly
+              />
+              <Icon src={triangle} alt="Descriptive Alt Text" />
+            </Wrapper>
+            <BlueBoxContainer>
+              <BlueBoxIcon src={rightArrow} alt="Descriptive Alt Text" />
+            </BlueBoxContainer>
+          </div>
         </TemplateSection>
       </Container>
       <Heading>Or start with common Competitive Media Spend questions</Heading>
@@ -421,6 +515,7 @@ const CommonQuestion = () => {
           placeholder="Type your question"
           value={userInput}
           onChange={(e) => {
+            console.log("🚀 ~ CommonQuestion ~ e:", e);
             setUserInput(e.target.value);
           }}
           onKeyDown={handleKeyDown}
