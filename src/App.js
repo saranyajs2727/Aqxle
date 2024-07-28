@@ -1,27 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
-import Dashboard from './components/Dashborad/Dashboard';
+import React from "react";
+import Dashboard from "./components/Dashborad/Dashboard";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import Graph from "./components/Graph/Graph";
+import CommonQuestion from "./components/commonQuestion/CommonQuestion";
+import Table from "./components/Table/Table";
+import InsightWorkSpace from "./components/InsightWorkSpace/InsightWorkSpace";
+import UploadFile from "./components/UploadFile/UploadFile";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" /> */}
-        {/* <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-      <Dashboard />
-    </div>
+    // <div>
+    //     //   <GlobalStyle />
+    //     //   <Dashboard />
+
+    //     // </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />}>
+          <Route index element={<InsightWorkSpace />} />
+          <Route path="commonquestions" element={<CommonQuestion />} />
+          <Route path="table" element={<Table />} />
+          <Route path="/graph" element={<Graph />} />
+          <Route path="/uploadfile" element={<UploadFile />} />
+        </Route>
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
