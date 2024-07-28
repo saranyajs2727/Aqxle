@@ -5,6 +5,7 @@ import insight from "../../assets/workspace2.png";
 import sales from "../../assets/workspace3.png";
 import mediaIcon from "../../assets/workspace4.png";
 import economic from "../../assets/workspace5.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -41,7 +42,8 @@ const InsightsItem = styled.div`
   height: 86px;
 
   &:hover {
-    border-color: #000;
+    background:#edf5f8;
+    
   }
 
   ${(props) =>
@@ -58,14 +60,15 @@ const ItemText = styled.span`
   font-size: 24px;
   letter-spacing: -0.42px;
   line-height: 50px;
-  color:rgba(47, 47, 47, 1);
-  text-align:center;
+  color: rgba(47, 47, 47, 1);
+  text-align: center;
 
   ${(props) =>
     props.active &&
     `
     border-color: blue;
     font-weight: 400;
+
   `}
 `;
 
@@ -84,11 +87,14 @@ const Image = styled.img`
 `;
 
 function InsightWorkSpace() {
+  const navigate = useNavigate();
   return (
     <Container>
       <Title>Pick an insights workspace to get started</Title>
       <InsightsList>
-        <InsightsItem active>
+        <InsightsItem active onClick={() => {
+           navigate("/uploadfile");
+        }}>
           <Image src={spends} alt="Descriptive Alt Text" />
           <ItemText active>Competitive Spends</ItemText>
           <Arrow>→</Arrow>

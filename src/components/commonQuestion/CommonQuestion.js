@@ -217,7 +217,7 @@ const Input = styled.input`
 const InputContainer = styled.div`
   position: fixed;
   bottom: 40px;
-  width: 78%;
+  width: 76%;
   box-shadow: 0 -2px -2px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
@@ -424,10 +424,10 @@ const CommonQuestion = () => {
               <FileItem>FinQ12022_1151511_1151512_export.csv</FileItem>
               <DeleteIcon src={deleteIcon} alt="Descriptive Alt Text" />
             </FileContainer>
-            <FileContainer>
+            {/* <FileContainer>
               <FileItem>FinQ12022_1151511_1151512_export.csv</FileItem>
               <DeleteIcon src={deleteIcon} alt="Descriptive Alt Text" />
-            </FileContainer>
+            </FileContainer> */}
           </FileList>
         </BackgroundContainer>
 
