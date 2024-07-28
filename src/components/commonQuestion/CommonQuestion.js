@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import rightArrow from "../../assets/arrow_right.png";
 import Graph from "../Graph/Graph";
@@ -163,6 +163,7 @@ const Wrapper = styled.div`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 41%;
+  cursor: pointer;
 `;
 
 const Icon = styled.img`
@@ -200,21 +201,26 @@ const Input = styled.input`
   box-sizing: border-box;
   border-radius: 24px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border: none;
   &::placeholder {
     color: rgba(201, 195, 195, 1);
-    // font-style: italic;
     font-weight: 300;
     line-height: 34px;
   }
   &:focus {
-    border-color: rgba(236, 236, 236, 1);
+    border: none;
   }
 `;
 
 const InputContainer = styled.div`
-  position: relative;
-  width: 100%;
-  margin-top: 20px;
+  position: fixed;
+  bottom: 40px;
+  width: 78%;
+  box-shadow: 0 -2px -2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 `;
 
 const data = [
@@ -235,13 +241,13 @@ const data = [
   {
     id: "Question 3",
     question: `What are the top categories under which JP Morgan spends ?`,
-    value: `271616117.7802`,
+    value: `7816117.7802`,
     heading: `Common media spends question #3`,
   },
   {
     id: "Question 4",
     question: `Use both the data sets. And from vivvix use the "TOTAL $" column as you mentioned.`,
-    value: `271616117.7802`,
+    value: `98616117.7802`,
     heading: `Common media spends question #4`,
   },
 ];
@@ -259,59 +265,53 @@ const CommonQuestion = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [questionPicked, setQuestionPicked] = useState("");
+  const [renderedContent, setRenderedContent] = useState([]);
+  const sampleDataRef = useRef(null);
 
-  // Sample data component
-  const SampleData = () => {
-    return (
-      <div>
-        {data.map((item) => {
-          if (
-            item.id === selectedQuestion ||
-            item.heading === selectedQuestion
-          ) {
-            return (
-              <div key={item.id}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <h3>{item.heading}</h3>
-                  <div style={{ display: "flex" }}>
-                    <AddImage src={addFiles} alt="Descriptive Alt Text" />
-                    <TemplateText>Save question to template</TemplateText>
-                  </div>
-                </div>
-                <p>{item.value}</p>
-                {/* Graph */}
-                <div style={{ marginTop: 40 }}>
-                  <Graph />
-                </div>
-              </div>
-            );
-          }
-          return null;
-        })}
+  const SampleData = ({ item }) => (
+    <div key={item.id} ref={sampleDataRef}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h3>{item.heading}</h3>
+        <div style={{ display: "flex" }}>
+          <AddImage src={addFiles} alt="Descriptive Alt Text" />
+          <TemplateText>Save question to template</TemplateText>
+        </div>
       </div>
-    );
-  };
+      <p>{item.value}</p>
+      <div style={{ marginTop: 40 }}>
+        <Graph />
+      </div>
+    </div>
+  );
 
   const handleQuestionClick = (question) => {
-    console.log("🚀 ~ handleQuestionClick ~ question:", question);
     if (question === undefined) {
       question = questionPicked;
     }
     setLoading(true);
     setSelectedQuestion(question);
-    const selectedItem = data.find(
-      (item) => item.id === question
-      //  || item.heading === selectedQuestion
+
+    // Determine the item to display (first matched item or the first item in the data array)
+    const matchedItems = data.filter(
+      (item) =>
+        item.id === selectedQuestion || item.heading === selectedQuestion
     );
-    console.log("🚀 ~ handleQuestionClick ~ selectedItem:", selectedItem);
-    if (selectedItem) {
-      setUserInput(selectedItem.heading);
+    const itemToDisplay = matchedItems.length > 0 ? matchedItems[0] : data[0];
+
+    if (itemToDisplay) {
+      setUserInput(itemToDisplay.heading);
+      setRenderedContent((prevContent) => [...prevContent, itemToDisplay]);
     }
+
     setTimeout(() => {
       setLoading(false);
-    }, 3000); // Simulate API loading time
+      if (sampleDataRef.current) {
+        sampleDataRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 100); // Simulate API loading time
   };
 
   const handleKeyDown = (e) => {
@@ -325,10 +325,7 @@ const CommonQuestion = () => {
       userInput.toLowerCase().includes("chart") ||
       userInput.toLowerCase().includes("graph")
     ) {
-      console.log(userInput.toLowerCase().includes("Bonbon"));
       setSelectedQuestion("chart");
-    } else {
-      console.log(userInput.toLowerCase().includes("chart"), "else part");
     }
   }, [userInput]);
 
@@ -363,6 +360,7 @@ const CommonQuestion = () => {
             />
             <Icon src={triangle} alt="Descriptive Alt Text" />
           </Wrapper>
+          <div></div>
         </TemplateSection>
       </Container>
       <Heading>Or start with common Competitive Media Spend questions</Heading>
@@ -415,7 +413,7 @@ const CommonQuestion = () => {
       ) : selectedQuestion === "chart" ? (
         <Graph />
       ) : (
-        selectedQuestion && <SampleData />
+        renderedContent.map((item) => <SampleData key={item.id} item={item} />)
       )}
       <InputContainer>
         <Input
