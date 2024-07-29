@@ -164,15 +164,6 @@ const UploadFile = () => {
             type="file"
             onChange={handleFileChange}
           />
-          {file && (
-            <div>
-              <p>File: {file.name}</p>
-              {/* <button onClick={handleFileUpload}>Upload</button>
-              <ProgressBar>
-                <Progress progress={uploadProgress} />
-              </ProgressBar> */}
-            </div>
-          )}
         </UploadBox>
       </UploadLabel>
     </Container>

@@ -9,6 +9,8 @@ import triangle from "../../assets/Triangle.png";
 import question from "../../assets/question.png";
 import arrowRight from "../../assets/arrow_right.png";
 import whiteArrow from "../../assets/rightArrow.png";
+import SaveModal from "../SaveModal/SaveModal";
+import UploadingUI from "../UploadProgress/UploadProgress";
 
 // Styled components
 const CommonQuestions = styled.div`
@@ -87,7 +89,7 @@ const Container = styled.div`
   font-family: Arial, sans-serif;
 `;
 
-const SectionTitle = styled.h2`
+const SectionTitle = styled.p`
   font-size: 1.5em;
   margin-bottom: 10px;
   font-weight: 300;
