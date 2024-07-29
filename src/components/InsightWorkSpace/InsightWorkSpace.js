@@ -15,10 +15,10 @@ const Container = styled.div`
   margin-left: 48px;
 `;
 
-const Title = styled.h1`
+const Title = styled.p`
   margin-bottom: 20px;
   font-weight: 300;
-  font-size: 38px;
+  font-size: 24px;
   font-family: Helvetica Neue;
   line-height: 44px;
   letter-spacing: -0.28px;
@@ -32,7 +32,7 @@ const InsightsItem = styled.div`
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 15px;
+  padding: 6px 12px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
@@ -42,8 +42,7 @@ const InsightsItem = styled.div`
   height: 86px;
 
   &:hover {
-    background:#edf5f8;
-    
+    background: #edf5f8;
   }
 
   ${(props) =>
@@ -66,9 +65,7 @@ const ItemText = styled.span`
   ${(props) =>
     props.active &&
     `
-    border-color: blue;
-    font-weight: 400;
-
+    border-color: blue; 
   `}
 `;
 
@@ -84,39 +81,71 @@ const Arrow = styled.span`
 const Image = styled.img`
   height: 30px;
   width: 30px;
+  margin-right: 16px;
 `;
 
+const TextContainer = styled.div`
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+`;
+
+const ArrowContainer = styled.div`
+background: #fff;
+    width: 34px;
+    height:34px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+}
+`;
 function InsightWorkSpace() {
   const navigate = useNavigate();
   return (
     <Container>
       <Title>Pick an insights workspace to get started</Title>
       <InsightsList>
-        <InsightsItem active onClick={() => {
-           navigate("/uploadfile");
-        }}>
-          <Image src={spends} alt="Descriptive Alt Text" />
-          <ItemText active>Competitive Spends</ItemText>
-          <Arrow>→</Arrow>
+        <InsightsItem
+          active
+          onClick={() => {
+            navigate("/uploadfile");
+          }}
+        >
+          <TextContainer>
+            <Image src={spends} alt="Descriptive Alt Text" />
+            <ItemText active>Competitive Spends</ItemText>
+          </TextContainer>
+          <ArrowContainer>
+            <Arrow>→</Arrow>
+          </ArrowContainer>
         </InsightsItem>
         <InsightsItem>
-          <Image src={insight} alt="Descriptive Alt Text" />
-          <ItemText>Consumer Insights</ItemText>
+          <TextContainer>
+            <Image src={insight} alt="Descriptive Alt Text" />
+            <ItemText>Consumer Insights</ItemText>
+          </TextContainer>
           <ComingSoon>COMING SOON</ComingSoon>
         </InsightsItem>
         <InsightsItem>
-          <Image src={sales} alt="Descriptive Alt Text" />
-          <ItemText>Brand & Category Sales</ItemText>
+          <TextContainer>
+            <Image src={sales} alt="Descriptive Alt Text" />
+            <ItemText>Brand & Category Sales</ItemText>
+          </TextContainer>
           <ComingSoon>COMING SOON</ComingSoon>
         </InsightsItem>
         <InsightsItem>
-          <Image src={mediaIcon} alt="Descriptive Alt Text" />
-          <ItemText>Audience & Media Consumption</ItemText>
+          <TextContainer>
+            <Image src={mediaIcon} alt="Descriptive Alt Text" />
+            <ItemText>Audience & Media Consumption</ItemText>
+          </TextContainer>
           <ComingSoon>COMING SOON</ComingSoon>
         </InsightsItem>
         <InsightsItem>
-          <Image src={economic} alt="Descriptive Alt Text" />
-          <ItemText>Macroeconomic</ItemText>
+          <TextContainer>
+            <Image src={economic} alt="Descriptive Alt Text" />
+            <ItemText>Macroeconomic</ItemText>
+          </TextContainer>
           <ComingSoon>COMING SOON</ComingSoon>
         </InsightsItem>
       </InsightsList>
